@@ -179,6 +179,25 @@ bool CActiveMasternode::SendMasternodePing(std::string& errorMessage)
         return false;
     }
 
+	// SPORK 15 Check the collateral at every ping
+	{
+		CCoins coins;
+		if (!pcoinsTip->GetCoins(vin.prevout.hash, coins) ||
+			(unsigned int)vin.prevout.n >= coins.vout.size() ||
+			coins.vout[vin.prevout.n].IsNull()) {
+			strNotCapableReason = "Masternode failed to find UTXO";
+			nState = ACTIVE_MASTERNODE_NOT_CAPABLE;
+			LogPrint("masternode", "CActiveMasternode::SendMasternodePing -- Failed to find Masternode UTXO, masternode=%s\n", vin.prevout.ToStringShort());
+			return false;
+		}
+		if (coins.vout[vin.prevout.n].nValue != ActiveCollateral() * COIN) {
+			strNotCapableReason = "Masternode UTXO wrong collateral amount";
+			nState = ACTIVE_MASTERNODE_NOT_CAPABLE;
+			LogPrint("masternode", "CMasternodeBroadcast::CheckOutpoint -- Masternode UTXO should have %d H2O, masternode=%s, vin value = %d\n", ActiveCollateral(), vin.prevout.ToStringShort(), coins.vout[vin.prevout.n].nValue / COIN);
+			return false;
+		}
+	}
+
     LogPrintf("CActiveMasternode::SendMasternodePing() - Relay Masternode Ping vin = %s\n", vin.ToString());
 
     CMasternodePing mnp(vin);
@@ -481,7 +500,8 @@ vector<COutput> CActiveMasternode::SelectCoinsMasternode()
 
     // Filter
     BOOST_FOREACH (const COutput& out, vCoins) {
-        if (out.tx->vout[out.i].nValue == 10000 * COIN) { //exactly
+        //if (out.tx->vout[out.i].nValue == 10000 * COIN) { //exactly
+		if (out.tx->vout[out.i].nValue != ActiveCollateral() * COIN) { //exactly
             filteredCoins.push_back(out);
         }
     }

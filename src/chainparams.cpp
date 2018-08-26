@@ -120,7 +120,8 @@ public:
         nTargetSpacing = 1 * 60;  // Poseidon: 1 minute
         nMaturity = 10;
         nMasternodeCountDrift = 20;
-		nMasternodeCollateralAmt = 50000; //masternode collateral
+		nMasternodeCollateralAmtNew = 50000;
+		nMasternodeCollateralAmtOld = 10000; //masternode collateral
         nMaxMoneyOut = 50000000 * COIN;
 
         /** Height or Time Based Activations **/
