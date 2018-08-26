@@ -6215,7 +6215,7 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv, 
         budget.ProcessMessage(pfrom, strCommand, vRecv);
         masternodePayments.ProcessMessageMasternodePayments(pfrom, strCommand, vRecv);
         ProcessMessageSwiftTX(pfrom, strCommand, vRecv);
-		sporkManager.ProcessSpork(pfrom, strCommand, vRecv);
+		ProcessSpork(pfrom, strCommand, vRecv);
         masternodeSync.ProcessMessage(pfrom, strCommand, vRecv);
     }
 
@@ -6237,7 +6237,7 @@ int ActiveProtocol()
 			return MIN_PEER_PROTO_VERSION_AFTER_ENFORCEMENT;
 */
 
-	if (sporkManager.IsSporkActive(SPORK_15_NEW_PROTOCOL_ENFORCEMENT_2))
+	if (IsSporkActive(SPORK_15_NEW_PROTOCOL_ENFORCEMENT_2))
 		return MIN_PEER_PROTO_VERSION_AFTER_ENFORCEMENT;
 	return MIN_PEER_PROTO_VERSION_BEFORE_ENFORCEMENT;
 }
@@ -6245,7 +6245,7 @@ int ActiveProtocol()
 // SPORK_17 
 	int ActiveCollateral()
 	{
-		if (sporkManager.IsSporkActive(SPORK_17_NEW_COLLATERAL_ENFORCEMENT)) {
+		if (IsSporkActive(SPORK_17_NEW_COLLATERAL_ENFORCEMENT)) {
 			return Params().MasternodeCollateralAmtNew();
 		}
 		return Params().MasternodeCollateralAmtOld();
