@@ -251,7 +251,7 @@ bool CActiveMasternode::SendMasternodePing(std::string& errorMessage)
 		return false;
 	}
 		}
-}
+
 
 bool CActiveMasternode::Register(std::string strService, std::string strKeyMasternode, std::string strTxHash, std::string strOutputIndex, std::string& errorMessage)
 {
