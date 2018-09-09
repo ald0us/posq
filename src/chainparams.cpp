@@ -226,7 +226,7 @@ printf("genesis.hashMerkleRoot = %s \n", genesis.hashMerkleRoot.ToString().c_str
 
         nPoolMaxTransactions = 3;
         //strSporkKey = "0459eede7626441f7802af2736cb3a4aeb3e1f95070cde39d068a4f16525ee8fdd3c075f29f9e115aeb91952239194aa6ac19765574fed8a0d7f174f2b450e9630";
-        strSporkKey = "03c865a299790fd1a7b829378657910f033d34d48c3d6d7c354c9ac0eaf68c98f7"
+        strSporkKey = "03c865a299790fd1a7b829378657910f033d34d48c3d6d7c354c9ac0eaf68c98f7";
         strObfuscationPoolDummyAddress = "SSQo21b24dD6AvQ2QyAfQFdBHTSw894tJb";
         nStartMasternodePayments = 1516371317; //Wed, 25 Jun 2014 20:36:16 GMT
 
