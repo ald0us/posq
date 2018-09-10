@@ -6238,10 +6238,10 @@ int ActiveProtocol()
 */
 
 //if (IsSporkActive(SPORK_15_NEW_PROTOCOL_ENFORCEMENT_2))
-	if (IsSporkActive(SPORK_15_NEW_PROTOCOL_ENFORCEMENT_2)) {
+	if (IsSporkActive(SPORK_15_NEW_PROTOCOL_ENFORCEMENT_2)) 
 		return MIN_PEER_PROTO_VERSION_AFTER_ENFORCEMENT;
 		return MIN_PEER_PROTO_VERSION_BEFORE_ENFORCEMENT;
-	}
+}
 
 	// SPORK_17 
 
@@ -6252,7 +6252,7 @@ int ActiveProtocol()
 		}
 		return Params().MasternodeCollateralAmtOld();
 	}
-}
+
 
 // requires LOCK(cs_vRecvMsg)
 bool ProcessMessages(CNode* pfrom)
