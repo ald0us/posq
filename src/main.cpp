@@ -6238,7 +6238,7 @@ int ActiveProtocol()
 */
 
 	//if (IsSporkActive(SPORK_15_NEW_PROTOCOL_ENFORCEMENT_2))
-if (sporkManager.IsSporkActive(SPORK_15_NEW_PROTOCOL_ENFORCEMENT_2)) {
+if (IsSporkActive(SPORK_15_NEW_PROTOCOL_ENFORCEMENT_2)) {
 		return MIN_PEER_PROTO_VERSION_AFTER_ENFORCEMENT;
 		return MIN_PEER_PROTO_VERSION_BEFORE_ENFORCEMENT;
 }
@@ -6247,7 +6247,7 @@ if (sporkManager.IsSporkActive(SPORK_15_NEW_PROTOCOL_ENFORCEMENT_2)) {
 
 	int ActiveCollateral()
 	{
-		if (sporkManager.IsSporkActive(SPORK_17_NEW_COLLATERAL_ENFORCEMENT)) {
+		if (IsSporkActive(SPORK_17_NEW_COLLATERAL_ENFORCEMENT)) {
 			return Params().MasternodeCollateralAmtNew();
 		}
 		return Params().MasternodeCollateralAmtOld();
