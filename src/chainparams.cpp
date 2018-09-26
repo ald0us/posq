@@ -122,6 +122,7 @@ public:
         nMasternodeCountDrift = 20;
         nMaxMoneyOut = 50000000 * COIN;
 
+
         /** Height or Time Based Activations **/
         nLastPOWBlock = 200;
         nModifierUpdateBlock = 999999999;
@@ -278,7 +279,9 @@ public:
         nBlockRecalculateAccumulators = 9908000; //Trigger a recalculation of accumulators
         nBlockFirstFraudulent = 9891737; //First block that bad serials emerged
         nBlockLastGoodCheckpoint = 9891730; //Last valid accumulator checkpoint
-        
+
+        nMasternodeCollateralAmt = ActiveCollateral(); //masternode collateral
+
         //! Modify the testnet genesis block so the timestamp is valid for a later start.
         genesis.nTime = 1537667000;
         genesis.nNonce = 93469;

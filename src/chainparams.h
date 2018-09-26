@@ -97,6 +97,13 @@ public:
     int64_t Budget_Fee_Confirmations() const { return nBudget_Fee_Confirmations; }
     CBaseChainParams::Network NetworkID() const { return networkID; }
 
+    //Original and New Masternode Collateral Amounts spork 17
+    int MasternodeCollateralAmt() const { return nMasternodeCollateralAmt; }
+    const int MasternodeCollateralAmtOld = 10000;
+    const int MasternodeCollateralAmtNew = 50000;
+    int nMasternodeCollateralAmt;
+
+
     /** Zerocoin **/
     std::string Zerocoin_Modulus() const { return zerocoinModulus; }
     libzerocoin::ZerocoinParams* Zerocoin_Params() const;

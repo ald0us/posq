@@ -12,7 +12,7 @@
 #include "spork.h"
 
 //
-// Bootup the Masternode, look for a 10000 POSQ input and register on the network
+// Bootup the Masternode, look for a 50000 POSQ input and register on the network
 //
 void CActiveMasternode::ManageStatus()
 {
@@ -48,6 +48,12 @@ void CActiveMasternode::ManageStatus()
         if (pwalletMain->IsLocked()) {
             notCapableReason = "Wallet is locked.";
             LogPrintf("CActiveMasternode::ManageStatus() - not capable: %s\n", notCapableReason);
+            return;
+        }
+
+        //New 50k collat
+        if (pwalletMain->GetBalance() < Params().MasternodeCollateralAmt() * COIN) {
+            LogPrintf("CActiveMasternode::ManageStateInitial -- %s: Wallet balance is < 50,000 Posq\n");
             return;
         }
 
