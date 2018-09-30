@@ -98,10 +98,11 @@ public:
     CBaseChainParams::Network NetworkID() const { return networkID; }
 
     //Original and New Masternode Collateral Amounts spork 17
-    int MasternodeCollateralAmt() const { return nMasternodeCollateralAmt; }
-    const int MasternodeCollateralAmtOld = 10000;
-    const int MasternodeCollateralAmtNew = 50000;
-    int nMasternodeCollateralAmt;
+    
+    int MasternodeCollateralAmtNew() const { return nMasternodeCollateralAmtNew; }
+    int MasternodeCollateralAmtOld() const { return nMasternodeCollateralAmtOld;  }
+   
+    
 
 
     /** Zerocoin **/
@@ -181,6 +182,9 @@ protected:
     int nBlockLastGoodCheckpoint;
     int nZerocoinStartTime;
     int nAccumulatorStartHeight;
+    int nMasternodeCollateralAmtOld;
+    int nMasternodeCollateralAmtNew;
+   
 };
 
 /**

@@ -6310,9 +6310,9 @@ int ActiveCollateral()
 {
     // SPORK_17 raising collaterals from 10k to 50k POSQ
     if (IsSporkActive(SPORK_17_NEW_COLLATERAL_ENFORCEMENT)) {
-        return Params().MasternodeCollateralAmtNew; //new collateral
+        return Params().MasternodeCollateralAmtNew(); //new collateral
     }
-    return Params().MasternodeCollateralAmtOld; //old collateral
+    return Params().MasternodeCollateralAmtOld(); //old collateral
 }
 
 // requires LOCK(cs_vRecvMsg)

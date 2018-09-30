@@ -52,7 +52,7 @@ void CActiveMasternode::ManageStatus()
         }
 
         //New 50k collat
-        if (pwalletMain->GetBalance() < Params().MasternodeCollateralAmt() * COIN) {
+        if (pwalletMain->GetBalance() < ActiveCollateral() * COIN) {
             LogPrintf("CActiveMasternode::ManageStateInitial -- %s: Wallet balance is < 50,000 Posq\n");
             return;
         }

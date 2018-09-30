@@ -1,5 +1,5 @@
 // Copyright (c) 2010 Satoshi Nakamoto
-// Copyright (c) 2009-2014 The Bitcoin developers
+// Copyright (c) 2008-2014 The Bitcoin developers
 // Copyright (c) 2014-2015 The Dash developers
 // Copyright (c) 2015-2017 The PIVX developers
 // Copyright (c) 2017 The Poseidon developers
@@ -119,6 +119,10 @@ public:
         nTargetTimespan = 1 * 60; // Poseidon: 1 day
         nTargetSpacing = 1 * 60;  // Poseidon: 1 minute
         nMaturity = 10;
+	
+	const int nMasternodeCollateralAmtOld = 10000;
+        const int nMasternodeCollateralAmtNew = 50000;
+
         nMasternodeCountDrift = 20;
         nMaxMoneyOut = 50000000 * COIN;
 
@@ -274,14 +278,18 @@ public:
         nModifierUpdateBlock = 51197; //approx Mon, 17 Apr 2017 04:00:00 GMT
         nMaxMoneyOut = 43199500 * COIN;
         nZerocoinStartHeight = 201576;
-        nZerocoinStartTime = 1501776000;
+        const int nMasternodeCollateralAmtOld = 10000;
+
+	const int nMasternodeCollateralAmtNew = 50000;
+	
+	nZerocoinStartTime = 1501776000;
         nBlockEnforceSerialRange = 1; //Enforce serial range starting this block
         nBlockRecalculateAccumulators = 9908000; //Trigger a recalculation of accumulators
         nBlockFirstFraudulent = 9891737; //First block that bad serials emerged
         nBlockLastGoodCheckpoint = 9891730; //Last valid accumulator checkpoint
-
-        nMasternodeCollateralAmt = ActiveCollateral(); //masternode collateral
-
+        
+        
+	
         //! Modify the testnet genesis block so the timestamp is valid for a later start.
         genesis.nTime = 1537667000;
         genesis.nNonce = 93469;
