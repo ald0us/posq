@@ -1626,12 +1626,14 @@ void CWallet::AvailableCoins(vector<COutput>& vCoins, bool fOnlyConfirmed, const
                     found = IsDenominatedAmount(pcoin->vout[i].nValue);
                 } else if (nCoinType == ONLY_NOT10000IFMN) {
                     //found = !(fMasterNode && pcoin->vout[i].nValue == 10000 * COIN);
-					found = !(fMasterNode && pcoin->vout[i].nValue == ActiveCollateral() * COIN);
+                    found = !(fMasterNode && pcoin->vout[i].nValue == ActiveCollateral() * COIN);
+
                 } else if (nCoinType == ONLY_NONDENOMINATED_NOT10000IFMN) {
                     if (IsCollateralAmount(pcoin->vout[i].nValue)) continue; // do not use collateral amounts
                     found = !IsDenominatedAmount(pcoin->vout[i].nValue);
                     //if (found && fMasterNode) found = pcoin->vout[i].nValue != 10000 * COIN; // do not use Hot MN funds
-					if (found && fMasterNode) found = pcoin->vout[i].nValue != ActiveCollateral() * COIN; // do not use Hot MN funds
+
+                    if (found && fMasterNode) found = pcoin->vout[i].nValue != ActiveCollateral() * COIN; // do not use Hot MN funds
                 } else if (nCoinType == ONLY_10000) {
                     //found = pcoin->vout[i].nValue == 10000 * COIN;
 					found = pcoin->vout[i].nValue == ActiveCollateral() * COIN;
@@ -2100,7 +2102,8 @@ bool CWallet::SelectCoinsDark(CAmount nValueMin, CAmount nValueMax, std::vector<
         //do not allow collaterals to be selected
         if (IsCollateralAmount(out.tx->vout[out.i].nValue)) continue;
         //if (fMasterNode && out.tx->vout[out.i].nValue == 10000 * COIN) continue; //masternode input
-		if (fMasterNode && out.tx->vout[out.i].nValue == ActiveCollateral() * COIN) continue; continue; //masternode input
+    		if (fMasterNode && out.tx->vout[out.i].nValue == ActiveCollateral() * COIN) continue; continue; //masternode input
+
 
         if (nValueRet + out.tx->vout[out.i].nValue <= nValueMax) {
             CTxIn vin = CTxIn(out.tx->GetHash(), out.i);

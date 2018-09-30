@@ -58,7 +58,6 @@ using namespace boost;
 #define SPORK_16_ZEROCOIN_MAINTENANCE_MODE_DEFAULT 4070908800     //OFF
 #define SPORK_17_NEW_COLLATERAL_ENFORCEMENT_DEFAULT 4070908800     //OFF
 
-
 class CSporkMessage;
 class CSporkManager;
 

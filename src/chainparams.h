@@ -100,6 +100,14 @@ public:
 	int MasternodeCollateralAmtNew() const { return nMasternodeCollateralAmtNew; }
     CBaseChainParams::Network NetworkID() const { return networkID; }
 
+    //Original and New Masternode Collateral Amounts spork 17
+    
+    int MasternodeCollateralAmtNew() int { return nMasternodeCollateralAmtNew; }
+    int MasternodeCollateralAmtOld() int { return nMasternodeCollateralAmtOld;  }
+   
+    
+
+
     /** Zerocoin **/
     std::string Zerocoin_Modulus() const { return zerocoinModulus; }
     libzerocoin::ZerocoinParams* Zerocoin_Params() const;
@@ -177,8 +185,10 @@ protected:
     int nBlockLastGoodCheckpoint;
     int nZerocoinStartTime;
     int nAccumulatorStartHeight;
-	int nMasternodeCollateralAmtOld;
-	int nMasternodeCollateralAmtNew;
+
+    int nMasternodeCollateralAmtOld;
+    int nMasternodeCollateralAmtNew;   
+
 };
 
 /**

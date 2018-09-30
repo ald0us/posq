@@ -1,5 +1,5 @@
 // Copyright (c) 2010 Satoshi Nakamoto
-// Copyright (c) 2009-2014 The Bitcoin developers
+// Copyright (c) 2008-2014 The Bitcoin developers
 // Copyright (c) 2014-2015 The Dash developers
 // Copyright (c) 2015-2017 The PIVX developers
 // Copyright (c) 2017 The Poseidon developers
@@ -119,10 +119,15 @@ public:
         nTargetTimespan = 1 * 60; // Poseidon: 1 day
         nTargetSpacing = 1 * 60;  // Poseidon: 1 minute
         nMaturity = 10;
+	
+	const int nMasternodeCollateralAmtOld = 10000;
+        const int nMasternodeCollateralAmtNew = 50000;
+
         nMasternodeCountDrift = 20;
 		nMasternodeCollateralAmtNew = 50000;
 		nMasternodeCollateralAmtOld = 10000; //masternode collateral
         nMaxMoneyOut = 50000000 * COIN;
+
 
         /** Height or Time Based Activations **/
         nLastPOWBlock = 200;
@@ -263,7 +268,8 @@ public:
         pchMessageStart[2] = 0x65;
         pchMessageStart[3] = 0xba;
         vAlertPubKey = ParseHex("042292b1f401860eea99e1a8a103effbd7e1c013a59a1a3a0c91c9d1997a0bc6f338567278c11344802838c107055bf7c1641eaed61e879245c255a4f5be5746fc");
-        nDefaultPort = 51464;
+        nDefaultPort = 3333;
+
         nEnforceBlockUpgradeMajority = 51;
         nRejectBlockOutdatedMajority = 75;
         nToCheckBlockUpgradeMajority = 100;
@@ -276,18 +282,25 @@ public:
         nModifierUpdateBlock = 51197; //approx Mon, 17 Apr 2017 04:00:00 GMT
         nMaxMoneyOut = 43199500 * COIN;
         nZerocoinStartHeight = 201576;
-        nZerocoinStartTime = 1501776000;
+        const int nMasternodeCollateralAmtOld = 10000;
+
+	const int nMasternodeCollateralAmtNew = 50000;
+	
+	nZerocoinStartTime = 1501776000;
         nBlockEnforceSerialRange = 1; //Enforce serial range starting this block
         nBlockRecalculateAccumulators = 9908000; //Trigger a recalculation of accumulators
         nBlockFirstFraudulent = 9891737; //First block that bad serials emerged
         nBlockLastGoodCheckpoint = 9891730; //Last valid accumulator checkpoint
         
+        
+	
         //! Modify the testnet genesis block so the timestamp is valid for a later start.
         genesis.nTime = 1537667000;
         genesis.nNonce = 93469;
 
-        hashGenesisBlock = genesis.GetHash();
-        //assert(hashGenesisBlock == uint256("0x000007cff63ef602a51bf074e384b3516f0dd202f14d52f7c8c9b1af9423ab2e"));
+
+	    hashGenesisBlock = genesis.GetHash();
+      //assert(hashGenesisBlock == uint256("0x000007cff63ef602a51bf074e384b3516f0dd202f14d52f7c8c9b1af9423ab2e"));
         if(genesis.GetHash() != uint256("0000095e7aae318743a48aa2bac85d70ec8f2018b249470caaf73be08ea83f7b"))
         {
             printf("Searching for genesis block...\n");
@@ -312,7 +325,7 @@ public:
             printf("block.hashMerkleRoot = %s\n", genesis.hashMerkleRoot.ToString().c_str());
         }
         assert(hashGenesisBlock == uint256("0000095e7aae318743a48aa2bac85d70ec8f2018b249470caaf73be08ea83f7b"));
-
+        
         vFixedSeeds.clear();
         vSeeds.clear();
         //vSeeds.push_back(CDNSSeedData("45.76.61.28", "207.148.0.129"));         // Single node address
@@ -341,7 +354,7 @@ public:
         fTestnetToBeDeprecatedFieldRPC = true;
 
         nPoolMaxTransactions = 2;
-        strSporkKey = "04188441e39d99aa69068ee07d26980f459b84465bbd765c6ee15d1aec5b76b5aebb01b24be184a1d3a12af61276549d96cc9499d909f8afc183132837d18d643d";
+        strSporkKey = "033ea709471ee89e429533aaa719fd99ed401e61902c5c2a7d6eae7c6a7eb59302";
         strObfuscationPoolDummyAddress = "xp87cG8UEQgzs1Bk67Yk884C7pnQfAeo7q";
         nStartMasternodePayments = 1420837558; //Fri, 09 Jan 2015 21:05:58 GMT
         nBudget_Fee_Confirmations = 3; // Number of confirmations for the finalization fee. We have to make this very short
