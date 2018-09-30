@@ -67,12 +67,12 @@ static const Checkpoints::CCheckpointData data = {
 };
 
 static Checkpoints::MapCheckpoints mapCheckpointsTestnet =
-    boost::assign::map_list_of(0, uint256("0x001"));
+        boost::assign::map_list_of(0, uint256("0x0000095e7aae318743a48aa2bac85d70ec8f2018b249470caaf73be08ea83f7b"));
 static const Checkpoints::CCheckpointData dataTestnet = {
-    &mapCheckpointsTestnet,
-    1740710,
-    0,
-    250};
+        &mapCheckpointsTestnet,
+        1537667000,
+        0,
+        250};
 
 static Checkpoints::MapCheckpoints mapCheckpointsRegtest =
     boost::assign::map_list_of(0, uint256("0x001"));
@@ -124,6 +124,8 @@ public:
         const int nMasternodeCollateralAmtNew = 50000;
 
         nMasternodeCountDrift = 20;
+		nMasternodeCollateralAmtNew = 50000;
+		nMasternodeCollateralAmtOld = 10000; //masternode collateral
         nMaxMoneyOut = 50000000 * COIN;
 
 
@@ -228,7 +230,8 @@ printf("genesis.hashMerkleRoot = %s \n", genesis.hashMerkleRoot.ToString().c_str
         fHeadersFirstSyncingActive = false;
 
         nPoolMaxTransactions = 3;
-        strSporkKey = "0459eede7626441f7802af2736cb3a4aeb3e1f95070cde39d068a4f16525ee8fdd3c075f29f9e115aeb91952239194aa6ac19765574fed8a0d7f174f2b450e9630";
+        //strSporkKey = "0459eede7626441f7802af2736cb3a4aeb3e1f95070cde39d068a4f16525ee8fdd3c075f29f9e115aeb91952239194aa6ac19765574fed8a0d7f174f2b450e9630";
+        strSporkKey = "03c865a299790fd1a7b829378657910f033d34d48c3d6d7c354c9ac0eaf68c98f7";
         strObfuscationPoolDummyAddress = "SSQo21b24dD6AvQ2QyAfQFdBHTSw894tJb";
         nStartMasternodePayments = 1516371317; //Wed, 25 Jun 2014 20:36:16 GMT
 
@@ -266,6 +269,7 @@ public:
         pchMessageStart[3] = 0xba;
         vAlertPubKey = ParseHex("042292b1f401860eea99e1a8a103effbd7e1c013a59a1a3a0c91c9d1997a0bc6f338567278c11344802838c107055bf7c1641eaed61e879245c255a4f5be5746fc");
         nDefaultPort = 3333;
+
         nEnforceBlockUpgradeMajority = 51;
         nRejectBlockOutdatedMajority = 75;
         nToCheckBlockUpgradeMajority = 100;
@@ -294,11 +298,39 @@ public:
         genesis.nTime = 1537667000;
         genesis.nNonce = 93469;
 
-	    hashGenesisBlock = genesis.GetHash();
-        assert(hashGenesisBlock == uint256("0x0000095e7aae318743a48aa2bac85d70ec8f2018b249470caaf73be08ea83f7b"));
 
+	    hashGenesisBlock = genesis.GetHash();
+      //assert(hashGenesisBlock == uint256("0x000007cff63ef602a51bf074e384b3516f0dd202f14d52f7c8c9b1af9423ab2e"));
+        if(genesis.GetHash() != uint256("0000095e7aae318743a48aa2bac85d70ec8f2018b249470caaf73be08ea83f7b"))
+        {
+            printf("Searching for genesis block...\n");
+            uint256 hashTarget = CBigNum().SetCompact(genesis.nBits).getuint256();
+            while(uint256(genesis.GetHash()) > hashTarget)
+            {
+                ++genesis.nNonce;
+                if (genesis.nNonce == 0)
+                {
+                    printf("NONCE WRAPPED, incrementing time");
+                    std::cout << std::string("NONCE WRAPPED, incrementing time:\n");
+                    ++genesis.nTime;
+                }
+                if (genesis.nNonce % 10000 == 0)
+                {
+                    printf("Testnet: nonce %08u: hash = %s \n", genesis.nNonce, genesis.GetHash().ToString().c_str());
+                }
+            }
+            printf("block.nTime = %u \n", genesis.nTime);
+            printf("block.nNonce = %u \n", genesis.nNonce);
+            printf("block.GetHash = %s\n", genesis.GetHash().ToString().c_str());
+            printf("block.hashMerkleRoot = %s\n", genesis.hashMerkleRoot.ToString().c_str());
+        }
+        assert(hashGenesisBlock == uint256("0000095e7aae318743a48aa2bac85d70ec8f2018b249470caaf73be08ea83f7b"));
+        
         vFixedSeeds.clear();
         vSeeds.clear();
+        //vSeeds.push_back(CDNSSeedData("45.76.61.28", "207.148.0.129"));         // Single node address
+        //vSeeds.push_back(CDNSSeedData("209.250.240.94", "45.77.239.30"));       // Single node address
+        //vSeeds.push_back(CDNSSeedData("45.77.176.204", "45.76.226.204"));       // Single node address
 
 
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1, 139); // Testnet poseidon addresses start with 'x' or 'y'

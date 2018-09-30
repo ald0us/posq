@@ -141,6 +141,7 @@ void CActiveMasternode::ManageStatus()
     if (!SendMasternodePing(errorMessage)) {
         LogPrintf("CActiveMasternode::ManageStatus() - Error on Ping: %s\n", errorMessage);
     }
+
 }
 
 std::string CActiveMasternode::GetStatus()
@@ -163,86 +164,88 @@ std::string CActiveMasternode::GetStatus()
 
 bool CActiveMasternode::SendMasternodePing(std::string& errorMessage)
 {
-    if (status != ACTIVE_MASTERNODE_STARTED) {
-        errorMessage = "Masternode is not in a running status";
-        return false;
-    }
+	if (status != ACTIVE_MASTERNODE_STARTED) {
+		errorMessage = "Masternode is not in a running status";
+		return false;
+	}
 
-    CPubKey pubKeyMasternode;
-    CKey keyMasternode;
+	CPubKey pubKeyMasternode;
+	CKey keyMasternode;
 
-    if (!obfuScationSigner.SetKey(strMasterNodePrivKey, errorMessage, keyMasternode, pubKeyMasternode)) {
-        errorMessage = strprintf("Error upon calling SetKey: %s\n", errorMessage);
-        return false;
-    }
+	if (!obfuScationSigner.SetKey(strMasterNodePrivKey, errorMessage, keyMasternode, pubKeyMasternode)) {
+		errorMessage = strprintf("Error upon calling SetKey: %s\n", errorMessage);
+		return false;
+	}
 
-    LogPrintf("CActiveMasternode::SendMasternodePing() - Relay Masternode Ping vin = %s\n", vin.ToString());
+	LogPrintf("CActiveMasternode::SendMasternodePing() - Relay Masternode Ping vin = %s\n", vin.ToString());
 
-    CMasternodePing mnp(vin);
-    if (!mnp.Sign(keyMasternode, pubKeyMasternode)) {
-        errorMessage = "Couldn't sign Masternode Ping";
-        return false;
-    }
+	CMasternodePing mnp(vin);
+	if (!mnp.Sign(keyMasternode, pubKeyMasternode)) {
+		errorMessage = "Couldn't sign Masternode Ping";
+		return false;
+	}
 
-    // Update lastPing for our masternode in Masternode list
-    CMasternode* pmn = mnodeman.Find(vin);
-    if (pmn != NULL) {
-        if (pmn->IsPingedWithin(MASTERNODE_PING_SECONDS, mnp.sigTime)) {
-            errorMessage = "Too early to send Masternode Ping";
-            return false;
-        }
+	// Update lastPing for our masternode in Masternode list
+	CMasternode* pmn = mnodeman.Find(vin);
+	if (pmn != NULL) {
+		if (pmn->IsPingedWithin(MASTERNODE_PING_SECONDS, mnp.sigTime)) {
+			errorMessage = "Too early to send Masternode Ping";
+			return false;
+		}
 
-        pmn->lastPing = mnp;
-        mnodeman.mapSeenMasternodePing.insert(make_pair(mnp.GetHash(), mnp));
+		pmn->lastPing = mnp;
+		mnodeman.mapSeenMasternodePing.insert(make_pair(mnp.GetHash(), mnp));
 
-        //mnodeman.mapSeenMasternodeBroadcast.lastPing is probably outdated, so we'll update it
-        CMasternodeBroadcast mnb(*pmn);
-        uint256 hash = mnb.GetHash();
-        if (mnodeman.mapSeenMasternodeBroadcast.count(hash)) mnodeman.mapSeenMasternodeBroadcast[hash].lastPing = mnp;
+		//mnodeman.mapSeenMasternodeBroadcast.lastPing is probably outdated, so we'll update it
+		CMasternodeBroadcast mnb(*pmn);
+		uint256 hash = mnb.GetHash();
+		if (mnodeman.mapSeenMasternodeBroadcast.count(hash)) mnodeman.mapSeenMasternodeBroadcast[hash].lastPing = mnp;
 
-        mnp.Relay();
+		mnp.Relay();
 
-        /*
-         * IT'S SAFE TO REMOVE THIS IN FURTHER VERSIONS
-         * AFTER MIGRATION TO V12 IS DONE
-         */
+		/*
+		 * IT'S SAFE TO REMOVE THIS IN FURTHER VERSIONS
+		 * AFTER MIGRATION TO V12 IS DONE
+		 */
 
-        if (IsSporkActive(SPORK_10_MASTERNODE_PAY_UPDATED_NODES)) return true;
-        // for migration purposes ping our node on old masternodes network too
-        std::string retErrorMessage;
-        std::vector<unsigned char> vchMasterNodeSignature;
-        int64_t masterNodeSignatureTime = GetAdjustedTime();
+		if (IsSporkActive(SPORK_10_MASTERNODE_PAY_UPDATED_NODES)) return true;
+		// for migration purposes ping our node on old masternodes network too
+		std::string retErrorMessage;
+		std::vector<unsigned char> vchMasterNodeSignature;
+		int64_t masterNodeSignatureTime = GetAdjustedTime();
 
-        std::string strMessage = service.ToString() + boost::lexical_cast<std::string>(masterNodeSignatureTime) + boost::lexical_cast<std::string>(false);
+		std::string strMessage = service.ToString() + boost::lexical_cast<std::string>(masterNodeSignatureTime) + boost::lexical_cast<std::string>(false);
 
-        if (!obfuScationSigner.SignMessage(strMessage, retErrorMessage, vchMasterNodeSignature, keyMasternode)) {
-            errorMessage = "dseep sign message failed: " + retErrorMessage;
-            return false;
-        }
+		if (!obfuScationSigner.SignMessage(strMessage, retErrorMessage, vchMasterNodeSignature, keyMasternode)) {
+			errorMessage = "dseep sign message failed: " + retErrorMessage;
+			return false;
+		}
 
-        if (!obfuScationSigner.VerifyMessage(pubKeyMasternode, vchMasterNodeSignature, strMessage, retErrorMessage)) {
-            errorMessage = "dseep verify message failed: " + retErrorMessage;
-            return false;
-        }
+		if (!obfuScationSigner.VerifyMessage(pubKeyMasternode, vchMasterNodeSignature, strMessage, retErrorMessage)) {
+			errorMessage = "dseep verify message failed: " + retErrorMessage;
+			return false;
+		}
 
-        LogPrint("masternode", "dseep - relaying from active mn, %s \n", vin.ToString().c_str());
-        LOCK(cs_vNodes);
-        BOOST_FOREACH (CNode* pnode, vNodes)
-            pnode->PushMessage("dseep", vin, vchMasterNodeSignature, masterNodeSignatureTime, false);
+		LogPrint("masternode", "dseep - relaying from active mn, %s \n", vin.ToString().c_str());
+		LOCK(cs_vNodes);
+		BOOST_FOREACH(CNode* pnode, vNodes)
+			pnode->PushMessage("dseep", vin, vchMasterNodeSignature, masterNodeSignatureTime, false);
 
-        /*
-         * END OF "REMOVE"
-         */
+		/*
+		 * END OF "REMOVE"
+		 */
 
-        return true;
-    } else {
-        // Seems like we are trying to send a ping while the Masternode is not registered in the network
-        errorMessage = "Obfuscation Masternode List doesn't include our Masternode, shutting down Masternode pinging service! " + vin.ToString();
-        status = ACTIVE_MASTERNODE_NOT_CAPABLE;
-        notCapableReason = errorMessage;
-        return false;
-    }
-}
+		return true;
+	}
+	else {
+		// Seems like we are trying to send a ping while the Masternode is not registered in the network
+		errorMessage = "Obfuscation Masternode List doesn't include our Masternode, shutting down Masternode pinging service! " + vin.ToString();
+		status = ACTIVE_MASTERNODE_NOT_CAPABLE;
+		notCapableReason = errorMessage;
+		return false;
+	}
+		}
+
 
 bool CActiveMasternode::Register(std::string strService, std::string strKeyMasternode, std::string strTxHash, std::string strOutputIndex, std::string& errorMessage)
 {
@@ -478,7 +481,8 @@ vector<COutput> CActiveMasternode::SelectCoinsMasternode()
 
     // Filter
     BOOST_FOREACH (const COutput& out, vCoins) {
-        if (out.tx->vout[out.i].nValue == 10000 * COIN) { //exactly
+        //if (out.tx->vout[out.i].nValue == 10000 * COIN) { //exactly
+		if (out.tx->vout[out.i].nValue != ActiveCollateral() * COIN) { //exactly
             filteredCoins.push_back(out);
         }
     }

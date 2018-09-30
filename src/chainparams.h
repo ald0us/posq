@@ -95,12 +95,15 @@ public:
     std::string ObfuscationPoolDummyAddress() const { return strObfuscationPoolDummyAddress; }
     int64_t StartMasternodePayments() const { return nStartMasternodePayments; }
     int64_t Budget_Fee_Confirmations() const { return nBudget_Fee_Confirmations; }
+	//Central Collateral Amount
+	int MasternodeCollateralAmtOld() const { return nMasternodeCollateralAmtOld; }
+	int MasternodeCollateralAmtNew() const { return nMasternodeCollateralAmtNew; }
     CBaseChainParams::Network NetworkID() const { return networkID; }
 
     //Original and New Masternode Collateral Amounts spork 17
     
-    int MasternodeCollateralAmtNew() const { return nMasternodeCollateralAmtNew; }
-    int MasternodeCollateralAmtOld() const { return nMasternodeCollateralAmtOld;  }
+    int MasternodeCollateralAmtNew() int { return nMasternodeCollateralAmtNew; }
+    int MasternodeCollateralAmtOld() int { return nMasternodeCollateralAmtOld;  }
    
     
 
@@ -182,9 +185,10 @@ protected:
     int nBlockLastGoodCheckpoint;
     int nZerocoinStartTime;
     int nAccumulatorStartHeight;
+
     int nMasternodeCollateralAmtOld;
-    int nMasternodeCollateralAmtNew;
-   
+    int nMasternodeCollateralAmtNew;   
+
 };
 
 /**
