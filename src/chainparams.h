@@ -95,6 +95,9 @@ public:
     std::string ObfuscationPoolDummyAddress() const { return strObfuscationPoolDummyAddress; }
     int64_t StartMasternodePayments() const { return nStartMasternodePayments; }
     int64_t Budget_Fee_Confirmations() const { return nBudget_Fee_Confirmations; }
+	//Central Collateral Amount
+	int MasternodeCollateralAmtOld() const { return nMasternodeCollateralAmtOld; }
+	int MasternodeCollateralAmtNew() const { return nMasternodeCollateralAmtNew; }
     CBaseChainParams::Network NetworkID() const { return networkID; }
 
     /** Zerocoin **/
@@ -174,6 +177,8 @@ protected:
     int nBlockLastGoodCheckpoint;
     int nZerocoinStartTime;
     int nAccumulatorStartHeight;
+	int nMasternodeCollateralAmtOld;
+	int nMasternodeCollateralAmtNew;
 };
 
 /**
